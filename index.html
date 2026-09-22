@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>MaarstOn Craft — Free In-Browser Image Compress</title>
+  <meta name="description" content="Free, private, browser-based image compression tool. Reduce JPG, PNG, and WebP file sizes in seconds directly inside your browser without uploading to any server.">
+  <meta name="keywords" content="image compressor, compress image online, client side image compression, png compressor, jpg compressor, webp compressor, private image compress">
+  <meta name="author" content="MaarstOn Craft">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="MaarstOn Craft — Image Compress">
+  <meta property="og:description" content="Compress JPG, PNG, and WebP images privately in your browser without accounts or server uploads.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/logo/logo-full-dark.svg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg">
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Production Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Site Header: Logo, Brand & Theme Toggle Only -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-main-row">
+        <a href="/" class="brand-link" title="MaarstOn Craft Image Compress">
+          <img id="headerBrandLogo" src="assets/logo/logo-full-dark.svg" alt="MaarstOn Craft" class="brand-logo-img">
+        </a>
+
+        <div class="header-actions">
+          <div class="brand-tool-badge desktop-badge" title="Dedicated Image Compression Tool">
+            <span class="badge-dot"></span>
+            <span>Image Compress</span>
+          </div>
+
+          <div class="privacy-pill desktop-pill" title="Files never leave your device">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span>Private In-Browser</span>
+          </div>
+
+          <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Dark or Light Mode" title="Toggle theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Clean Mobile Sub-Row for Tool Identity -->
+      <div class="header-mobile-subrow">
+        <div class="brand-tool-badge mobile-badge">
+          <span class="badge-dot"></span>
+          <span>Image Compress</span>
+        </div>
+        <span class="header-subtag">100% In-Browser &bull; Zero Upload</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Error Notification Banner -->
+  <div id="errorBanner" class="error-banner" role="alert" style="display: none;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    <span id="errorMessage">An error occurred while processing your image.</span>
+    <button id="closeErrorBtn" class="close-err-btn" aria-label="Close error">&times;</button>
+  </div>
+
+  <main class="main-container">
+
+    <!-- ===================================================================== -->
+    <!-- 1. INITIAL UPLOAD HERO (Shown before an image is selected) -->
+    <!-- ===================================================================== -->
+    <section id="uploadSection" class="upload-hero">
+      <div class="hero-intro">
+        <h1 class="hero-title">Compress Images in Seconds. <br><span>100% Private in Your Browser.</span></h1>
+        <p class="hero-subtitle">
+          Reduce JPG, PNG, and WebP file sizes with full visual control. No file uploads, no cloud servers, and no quality surprises.
+        </p>
+      </div>
+
+      <!-- Main Smart Dropzone -->
+      <div id="dropzone" class="smart-dropzone" role="button" tabindex="0" aria-label="Dropzone to upload image">
+        <input type="file" id="filePicker" accept="image/jpeg,image/png,image/webp" style="display: none;">
+        
+        <div class="dropzone-icon-circle">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path><polyline points="16 16 12 12 8 16"></polyline></svg>
+        </div>
+
+        <h2 class="dropzone-heading">Drop your image here, or <span>browse files</span></h2>
+        <p class="dropzone-hint">Supports JPG, PNG, WebP up to 75MB &bull; processed locally on device</p>
+
+        <!-- Prominent Touch Button for Mobile Users -->
+        <button type="button" class="btn-dropzone-browse" id="btnDropzoneBrowse">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span>Select Image from Device</span>
+        </button>
+
+        <div class="format-badges">
+          <span class="badge-pill">JPG / JPEG</span>
+          <span class="badge-pill">PNG</span>
+          <span class="badge-pill">WEBP</span>
+          <span class="badge-pill highlight">ZERO SERVER UPLOAD</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 2. ACTIVE COMPRESSION WORKSPACE (Shown once an image is loaded) -->
+    <!-- ===================================================================== -->
+    <section id="workspaceSection" class="workspace-section" style="display: none;">
+
+      <!-- File Metadata Strip -->
+      <div class="file-meta-strip">
+        <div class="meta-header-row">
+          <div class="file-name-tag" id="metaFileName" title="Original File Name">image.jpg</div>
+          <button id="btnChangeImage" class="btn-change-image" title="Choose a different image">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>Change</span>
+          </button>
+        </div>
+        <div class="meta-pills-row">
+          <div class="meta-detail-pill">Original: <strong id="metaOriginalSize">0 B</strong></div>
+          <div class="meta-detail-pill">Dimensions: <strong id="metaDimensions">0 × 0 px</strong></div>
+          <div class="meta-detail-pill">Format: <strong id="metaFormat">JPEG</strong></div>
+          <div class="meta-detail-pill">Aspect: <strong id="metaRatio">1:1</strong></div>
+        </div>
+      </div>
+
+      <!-- Real-Time Metrics Summary Card -->
+      <div class="metrics-summary-card">
+        <div class="metric-block" data-metric="original">
+          <span class="metric-label">Original Size</span>
+          <span class="metric-val" id="metricOrigSize">0 KB</span>
+        </div>
+        <div class="metric-arrow desktop-arrow">&rarr;</div>
+        <div class="metric-block" data-metric="compressed">
+          <span class="metric-label">Compressed Size</span>
+          <span class="metric-val highlight" id="metricCompSize">0 KB</span>
+        </div>
+        <div class="metric-divider desktop-divider"></div>
+        <div class="metric-block" data-metric="saved">
+          <span class="metric-label">Saved</span>
+          <span class="metric-val" id="metricSavedBytes">0 KB</span>
+        </div>
+        <div class="metric-block" data-metric="reduction">
+          <span class="metric-label">Total Reduction</span>
+          <span class="reduction-badge" id="metricReductionBadge">0%</span>
+        </div>
+      </div>
+
+      <!-- Real-Time Warning Banner if compressed output is larger than original -->
+      <div id="sizeIncreaseWarning" class="size-increase-warning" style="display: none;">
+        <div class="warning-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <div class="warning-content">
+          <div class="warning-title">Notice: Compressed file is <strong id="warningIncreasePct">+0%</strong> larger than original</div>
+          <p class="warning-text">Your original image is already heavily compressed. Re-encoding at this quality level adds byte overhead. To reduce the file size below the original:</p>
+          <div class="warning-actions">
+            <button type="button" class="btn-warning-action" id="btnFixQuality">Set 60% Quality</button>
+            <button type="button" class="btn-warning-action" id="btnFixWebp">Switch to WebP</button>
+            <button type="button" class="btn-warning-action" id="btnFixResize">Scale to 75% Dimensions</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Controls & Viewport Grid -->
+      <div class="workspace-grid">
+
+        <!-- Left Column: Controls Card -->
+        <div class="controls-card">
+          <div class="card-header">
+            <h3 class="card-title">Compression Controls</h3>
+            <span class="card-tag">Interactive</span>
+          </div>
+
+          <!-- Slider Group -->
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-title">Quality / Compression Level</span>
+              <span class="slider-val mono" id="qualityNumDisplay">80%</span>
+            </div>
+            
+            <input type="range" id="qualitySlider" class="range-slider" min="5" max="100" value="80" step="1">
+
+            <!-- Visual Range Markers -->
+            <div class="slider-ticks">
+              <span class="tick-label">Aggressive</span>
+              <span class="tick-label">Strong</span>
+              <span class="tick-label active">Recommended</span>
+              <span class="tick-label">Very Light</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Status & Warning Indicator -->
+          <div id="qualityStatusCard" class="quality-status-card status-recommended">
+            <div class="status-header">
+              <div class="status-indicator-dot"></div>
+              <strong id="statusBadgeText">Recommended (Balanced)</strong>
+            </div>
+            <p id="statusDescText" class="status-desc">
+              Optimal sweet spot. Substantial file size reduction (50%–75%) with visually lossless quality.
+            </p>
+          </div>
+
+          <!-- Quick Quality Presets -->
+          <div class="presets-section">
+            <span class="presets-label">Quick Presets:</span>
+            <div class="presets-row">
+              <button class="preset-btn" data-q="92">High Quality (92%)</button>
+              <button class="preset-btn active" data-q="80">Recommended (80%)</button>
+              <button class="preset-btn" data-q="65">Strong (65%)</button>
+              <button class="preset-btn" data-q="45">Aggressive (45%)</button>
+            </div>
+          </div>
+
+          <!-- Transparency Warning Banner (Shown if PNG has alpha and JPEG is selected) -->
+          <div id="transparencyAlert" class="transparency-alert" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <div style="flex: 1;">
+              <strong>Transparency Notice:</strong> JPEG will fill transparent areas with solid white. Switch to WebP to keep your transparent background.
+            </div>
+            <button id="btnSwitchWebp" class="btn-switch-format">Use WebP</button>
+          </div>
+
+          <!-- Collapsible Advanced Settings Accordion -->
+          <details class="advanced-settings-accordion" id="advAccordion">
+            <summary class="advanced-summary">
+              <div class="summary-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span>Advanced Settings</span>
+              </div>
+              <span class="accordion-chevron">&rsaquo;</span>
+            </summary>
+
+            <div class="advanced-body">
+              <!-- Output Format Selection -->
+              <div class="form-group">
+                <label class="form-label" for="formatSelect">Output Format</label>
+                <select id="formatSelect" class="select-input">
+                  <option value="image/webp">WebP (Next-Gen &bull; Smallest Size &bull; Alpha Safe)</option>
+                  <option value="image/jpeg">JPEG (Universal photo format &bull; Highly compatible)</option>
+                  <option value="image/png">PNG (Lossless clean edges &bull; Larger file)</option>
+                </select>
+                <div class="form-help">WebP generally delivers 25%–35% smaller files than JPEG at equal visual fidelity.</div>
+              </div>
+
+              <!-- Dimension Resizing -->
+              <div class="form-group">
+                <label class="form-label">Resize Dimensions (Optional)</label>
+                <div class="dimension-inputs-row">
+                  <div class="input-with-label">
+                    <span class="input-affix">W</span>
+                    <input type="number" id="resizeWInput" class="text-input" placeholder="Width">
+                  </div>
+                  <button id="btnLockRatio" class="btn-lock-aspect active" title="Lock Aspect Ratio">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  </button>
+                  <div class="input-with-label">
+                    <span class="input-affix">H</span>
+                    <input type="number" id="resizeHInput" class="text-input" placeholder="Height">
+                  </div>
+                </div>
+
+                <!-- Scaling Presets -->
+                <div class="scale-preset-row">
+                  <button class="scale-btn" data-scale="0.25">25%</button>
+                  <button class="scale-btn" data-scale="0.5">50%</button>
+                  <button class="scale-btn" data-scale="0.75">75%</button>
+                  <button class="scale-btn active" data-scale="1.0">Original (100%)</button>
+                </div>
+              </div>
+
+              <!-- Filename Customization -->
+              <div class="form-group">
+                <label class="form-label" for="filenameInput">Output Filename</label>
+                <input type="text" id="filenameInput" class="text-input" placeholder="maarston-compressed">
+              </div>
+            </div>
+          </details>
+
+          <!-- Primary Actions -->
+          <div class="actions-group">
+            <button id="btnDownload" class="btn-download-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Download Compressed Image</span>
+            </button>
+
+            <button id="btnReset" class="btn-reset-secondary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+              <span>Compress Another Image</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Before / After Viewport -->
+        <div class="viewport-card">
+          <!-- Viewport Mode Navigation -->
+          <div class="viewport-toolbar">
+            <span class="viewport-title">Visual Comparison</span>
+            
+            <div class="view-mode-tabs" role="tablist">
+              <button class="view-tab-btn active" id="tabSideBySide" data-mode="side">Side-by-Side</button>
+              <button class="view-tab-btn" id="tabSplitSlider" data-mode="split">Split Slider</button>
+              <button class="view-tab-btn mobile-only" id="tabToggleMobile" data-mode="toggle">Toggle</button>
+            </div>
+          </div>
+
+          <!-- View Mode A: Side-by-Side View -->
+          <div id="viewSideBySide" class="preview-layout-side">
+            <!-- Original Card -->
+            <div class="preview-pane">
+              <div class="pane-badge">
+                <span>Original</span>
+                <strong id="sideOrigSizeBadge">0 KB</strong>
+              </div>
+              <div class="pane-canvas-wrap">
+                <img id="sideOrigImg" alt="Original preview" class="preview-media">
+              </div>
+            </div>
+
+            <!-- Compressed Card -->
+            <div class="preview-pane">
+              <div class="pane-badge highlight">
+                <span>Compressed Result</span>
+                <strong id="sideCompSizeBadge">0 KB</strong>
+              </div>
+              <div class="pane-canvas-wrap">
+                <img id="sideCompImg" alt="Compressed preview" class="preview-media">
+              </div>
+            </div>
+          </div>
+
+          <!-- View Mode B: Interactive Split View Slider -->
+          <div id="viewSplitSlider" class="preview-layout-split" style="display: none;">
+            <div class="split-canvas-container" id="splitCanvasContainer">
+              <canvas id="splitCanvas"></canvas>
+            </div>
+            <div class="split-instructions">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 8 4 12 8 16"></polyline><polyline points="16 8 20 12 16 16"></polyline></svg>
+              <span>Drag divider horizontally across the image to inspect quality differences</span>
+            </div>
+          </div>
+
+          <!-- View Mode C: Mobile Quick Toggle View -->
+          <div id="viewToggleMobile" class="preview-layout-toggle" style="display: none;">
+            <div class="mobile-toggle-switch">
+              <button class="mob-toggle-btn active" id="mobBtnOriginal">Original (<span id="mobOrigBadge">0 KB</span>)</button>
+              <button class="mob-toggle-btn" id="mobBtnCompressed">Compressed (<span id="mobCompBadge">0 KB</span>)</button>
+            </div>
+            <div class="pane-canvas-wrap" style="height: 380px;">
+              <img id="mobPreviewImg" alt="Interactive mobile preview" class="preview-media">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Mobile Sticky Action Bar (visible on narrow screens when image is loaded) -->
+  <div id="mobileStickyBar" class="mobile-sticky-bar" style="display: none;">
+    <div class="mobile-bar-stat">
+      <span class="mob-label">Output Size</span>
+      <span class="mob-val" id="mobStickySize">0 KB</span>
+    </div>
+    <div class="mobile-bar-stat">
+      <span class="mob-label">Savings</span>
+      <span class="reduction-badge" id="mobStickyBadge">0%</span>
+    </div>
+    <button id="btnMobileStickyDownload" class="btn-download-primary" style="padding: 0.65rem 1.25rem; font-size: 0.85rem;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Download
+    </button>
+  </div>
+
+  <!-- Minimal Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/logo/logo-icon.svg" alt="MaarstOn Craft" style="width: 24px; height: 24px;">
+        <span class="footer-title">MaarstOn Craft &bull; Image Compress</span>
+      </div>
+      <p class="footer-desc">
+        100% Client-Side In-Browser Image Compressor &bull; No Server Upload &bull; Private &bull; No Account Required
+      </p>
+      <div class="footer-copy">
+        &copy; 2026 MaarstOn Craft. Built with modern browser-native technologies.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Engines & Controller Scripts -->
+  <script src="js/image-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

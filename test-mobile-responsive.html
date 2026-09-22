@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mobile Viewport Regression Test</title>
+</head>
+<body>
+  <h1>Mobile Viewport QA Runner</h1>
+  <div id="log"></div>
+
+  <script>
+    const logDiv = document.getElementById('log');
+
+    function log(msg, pass = true) {
+      const p = document.createElement('p');
+      p.textContent = (pass ? '[PASS] ' : '[FAIL] ') + msg;
+      p.style.color = pass ? '#10b981' : '#f43f5e';
+      logDiv.appendChild(p);
+    }
+
+    async function testViewportWidth(width, height = 800) {
+      return new Promise((resolve) => {
+        const iframe = document.createElement('iframe');
+        iframe.style.width = width + 'px';
+        iframe.style.height = height + 'px';
+        iframe.style.border = 'none';
+        iframe.style.display = 'block';
+        iframe.style.margin = '10px 0';
+        iframe.src = 'index.html';
+
+        iframe.onload = async () => {
+          const doc = iframe.contentDocument;
+          const win = iframe.contentWindow;
+
+          // 1. Check Initial Upload State
+          const scrollW = doc.documentElement.scrollWidth;
+          const clientW = doc.documentElement.clientWidth;
+          const noOverflowUpload = scrollW <= clientW;
+
+          // Find any overflowing elements
+          const allEls = doc.querySelectorAll('*');
+          const overflowingUpload = [];
+          allEls.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.right > clientW + 1) { // 1px threshold for fractional pixels
+              overflowingUpload.push({
+                tag: el.tagName,
+                id: el.id,
+                className: el.className,
+                right: Math.round(rect.right),
+                clientW
+              });
+            }
+          });
+
+          // 2. Check Workspace State (simulated loaded file)
+          const uploadSec = doc.getElementById('uploadSection');
+          const workSec = doc.getElementById('workspaceSection');
+          const stickyBar = doc.getElementById('mobileStickyBar');
+          if (uploadSec && workSec) {
+            uploadSec.style.display = 'none';
+            workSec.style.display = 'flex';
+            if (stickyBar) stickyBar.style.display = 'flex';
+          }
+
+          // Let layout reflow
+          await new Promise(r => setTimeout(r, 50));
+
+          const scrollWWork = doc.documentElement.scrollWidth;
+          const clientWWork = doc.documentElement.clientWidth;
+          const noOverflowWork = scrollWWork <= clientWWork;
+
+          const overflowingWork = [];
+          doc.querySelectorAll('*').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.right > clientWWork + 1) {
+              overflowingWork.push({
+                tag: el.tagName,
+                id: el.id,
+                className: el.className,
+                right: Math.round(rect.right),
+                clientW: clientWWork
+              });
+            }
+          });
+
+          // 3. Check Light Mode
+          doc.documentElement.setAttribute('data-theme', 'light');
+          await new Promise(r => setTimeout(r, 30));
+          const noOverflowLight = doc.documentElement.scrollWidth <= doc.documentElement.clientWidth;
+
+          // Cleanup iframe
+          iframe.remove();
+
+          resolve({
+            width,
+            noOverflowUpload,
+            overflowingUpload,
+            noOverflowWork,
+            overflowingWork,
+            noOverflowLight
+          });
+        };
+
+        document.body.appendChild(iframe);
+      });
+    }
+
+    async function runAllViewportTests() {
+      const viewports = [320, 360, 375, 390, 412, 430, 480, 600, 768, 1024, 1280];
+      let allPass = true;
+
+      for (const w of viewports) {
+        const res = await testViewportWidth(w);
+        if (res.noOverflowUpload && res.noOverflowWork && res.noOverflowLight) {
+          log(`Viewport ${w}px: ZERO horizontal overflow in upload & workspace & light modes`, true);
+        } else {
+          allPass = false;
+          let detail = `scrollWidth: ${res.noOverflowUpload ? 'OK' : 'OVERFLOW'} (Upload), ${res.noOverflowWork ? 'OK' : 'OVERFLOW'} (Work)`;
+          if (res.overflowingUpload.length > 0) {
+            detail += ` | Upload offenders: ${res.overflowingUpload.map(o => o.id || o.className || o.tag).join(', ')}`;
+          }
+          if (res.overflowingWork.length > 0) {
+            detail += ` | Work offenders: ${res.overflowingWork.map(o => o.id || o.className || o.tag).join(', ')}`;
+          }
+          log(`Viewport ${w}px failed: ${detail}`, false);
+        }
+      }
+
+      const summary = document.createElement('h2');
+      summary.textContent = allPass ? 'ALL VIEWPORTS 100% PASSED ZERO HORIZONTAL OVERFLOW' : 'SOME VIEWPORTS FAILED';
+      summary.style.color = allPass ? '#10b981' : '#f43f5e';
+      document.body.appendChild(summary);
+
+      document.body.setAttribute('data-done', 'true');
+    }
+
+    runAllViewportTests();
+  </script>
+</body>
+</html>

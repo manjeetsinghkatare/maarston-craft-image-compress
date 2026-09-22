@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Optimized Favicon for MaarstOn Craft (Yellow + Black) -->
+  <defs>
+    <linearGradient id="fav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181B" />
+      <stop offset="100%" stop-color="#09090B" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#fav-bg)" stroke="#27272A" stroke-width="1.5" />
+  <!-- Cascade Sheets -->
+  <rect x="10" y="20" width="18" height="30" rx="3.5" fill="#854D0E" stroke="#A16207" stroke-width="1.5" />
+  <rect x="22" y="12" width="18" height="30" rx="3.5" fill="#FACC15" stroke="#FEF08A" stroke-width="1.8" />
+  <rect x="34" y="20" width="18" height="30" rx="3.5" fill="#FEF08A" stroke="#CA8A04" stroke-width="1.5" />
+  <circle cx="28" cy="18" r="2" fill="#18181B" />
+</svg>

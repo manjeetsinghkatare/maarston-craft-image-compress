@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Concept 07: The Prism Cascade (Standalone Mark - Yellow Accent) -->
+  <defs>
+    <linearGradient id="mark-sheet1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#854D0E" />
+      <stop offset="100%" stop-color="#1C1917" />
+    </linearGradient>
+    <linearGradient id="mark-sheet2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FACC15" />
+      <stop offset="100%" stop-color="#CA8A04" />
+    </linearGradient>
+    <linearGradient id="mark-sheet3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="100%" stop-color="#FACC15" />
+    </linearGradient>
+    <filter id="mark-shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Left Sheet (Base Document) -->
+  <rect x="18" y="32" width="30" height="48" rx="6" fill="url(#mark-sheet1)" stroke="#A16207" stroke-width="2" filter="url(#mark-shadow)" />
+  <line x1="24" y1="42" x2="38" y2="42" stroke="#FDE047" stroke-width="2" stroke-linecap="round" opacity="0.6" />
+  <line x1="24" y1="50" x2="34" y2="50" stroke="#FDE047" stroke-width="2" stroke-linecap="round" opacity="0.4" />
+
+  <!-- Center Sheet (Elevated Active Layer) -->
+  <rect x="35" y="18" width="30" height="48" rx="6" fill="url(#mark-sheet2)" stroke="#FEF08A" stroke-width="2.5" filter="url(#mark-shadow)" />
+  <circle cx="45" cy="28" r="3" fill="#0C0A09" />
+  <path d="M40 44 L46 36 L52 42 L58 34" stroke="#0C0A09" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Right Sheet (Output Layer) -->
+  <rect x="52" y="32" width="30" height="48" rx="6" fill="url(#mark-sheet3)" stroke="#FFFFFF" stroke-width="2" filter="url(#mark-shadow)" />
+  <line x1="60" y1="42" x2="72" y2="42" stroke="#713F12" stroke-width="2" stroke-linecap="round" opacity="0.9" />
+  <line x1="60" y1="50" x2="70" y2="50" stroke="#713F12" stroke-width="2" stroke-linecap="round" opacity="0.7" />
+  <line x1="60" y1="58" x2="66" y2="58" stroke="#713F12" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+</svg>
